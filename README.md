@@ -2,16 +2,20 @@
 # EV CHARGE - API REST
 
 ## ⚡ Descripción
-Backend centralizado para la plataforma de búsqueda y gestión de estaciones de carga eléctrica (electrolineras) en Colombia. Este componente actúa como el núcleo lógico (API REST) que procesa de forma segura la autenticación de usuarios, la consulta de conectores y la administración del sistema.
+El sistema titulado como EV Charge, esta centrado en convertir la movilidad electrica en algo mas factible haciendo que sea mejor la recarga de los vehiculos electricos
+a nivel Colombia guiando a los usuarios a mas puntos de recarga como lo son las electrolineras, el mayor objetivo es poder llegar a expandir nuestro servicio a profundidad globalmente.
+El sistema busca eliminar los problemas de compatibilidad de conectores, permitiendo a los usuarios ubicar puntos de carga disponibles en tiempo real, filtrar por tipo de conector, 
+gestionar reservas, registrar vehículos y consultar historiales de consumo, ofreciendo a su vez trazabilidad operativa y analítica para los operadores.
 
----
+
+--- 
 
 ## 🛠️ Tecnologías Utilizadas
 
 * **Lenguaje:** Python 3.12+
 * **Framework Principal:** FastAPI (Alto rendimiento y documentación automática)
 * **Servidor Web:** Uvicorn (Motor Asíncrono de Ejecución)
-* **Base de Datos / ORM:** PostgreSQL / MariaDB + SQLAlchemy
+* **Base de Datos / ORM:** PostgreSQL / SQLAlchemy
 * **Seguridad:** JWT (JSON Web Tokens) + Bcrypt / Python-Multipart (Encriptación de credenciales)
 
 ---
@@ -19,22 +23,117 @@ Backend centralizado para la plataforma de búsqueda y gestión de estaciones de
 ## 📂 Estructura del Proyecto
 
 ```text
-project/
+EV_CHARGE-Avance-80/
+├── .gitignore
+├── README.md
+├── LOGIN_RESERVAS_GUIDE.md
+├── PROFILE_FEATURE_GUIDE.md
+├── WAZE_INTEGRATION.md
+├── requirements.txt
+├── test_bd.py
 │
-├── app/
-│   ├── config/       # Configuración de variables de entorno y bases de datos
-│   ├── controllers/  # Lógica de negocio y controladores principales
-│   ├── models/       # Modelos relacionales de la base de datos (SQLAlchemy)
-│   ├── routes/       # Definición de Endpoints y Rutas Protegidas (HTTP)
-│   ├── schemas/      # Modelos de validación y serialización de datos (Pydantic)
-│   ├── utils/        # Funciones auxiliares (Hashing, JWT tokens, etc.)
-│   └── main.py       # Punto de entrada de la aplicación FastAPI
+├── app/                              ← BACKEND (FastAPI + Python)
+│   ├── main.py                       ← punto de entrada
+│   ├── README.md
+│   ├── config/
+│   │   └── database.py
+│   ├── controllers/                  ← lógica de negocio
+│   │   ├── admin_controller.py
+│   │   ├── auth_controller.py
+│   │   ├── calificaciones_controller.py
+│   │   ├── cargas_controller.py
+│   │   ├── contacto_controller.py
+│   │   ├── estado_controller.py
+│   │   ├── favoritos_controller.py
+│   │   ├── mapa_controller.py
+│   │   ├── metodo_pago_controller.py
+│   │   ├── notificaciones_controller.py
+│   │   ├── reportes_controller.py
+│   │   ├── reservas_controller.py
+│   │   └── vehiculo_controller.py
+│   ├── models/                       ← modelos de BD
+│   │   ├── usuario_model.py, vehiculo_model.py, reserva_model.py
+│   │   ├── carga_model.py, calificacion_model.py, favorito_model.py
+│   │   ├── metodo_pago_model.py, notificacion_model.py, reporte_model.py
+│   │   ├── contacto_model.py, estacion_propia_model.py
+│   │   ├── estado_estacion_model.py
+│   │   └── utils.py
+│   ├── routes/                       ← endpoints
+│   │   ├── admin_routes.py, auth_routes.py, mapa_routes.py
+│   │   ├── reservas_routes.py, vehiculos_routes.py, cargas_routes.py
+│   │   ├── calificaciones_routes.py, favoritos_routes.py
+│   │   ├── metodos_pago_routes.py, notificaciones_routes.py
+│   │   ├── reportes_routes.py, contacto_routes.py, estado_routes.py
+│   │   ├── pagos.py
+│   │   └── olvidar_contraseña.py
+│   ├── schemas/                      ← validación (Pydantic)
+│   │   ├── admin_schema.py, auth_schemas.py, mapa_schema.py
+│   │   ├── reservas_schemas.py, vehiculo_schema.py, pago_schema.py
+│   │   └── ... (uno por módulo, igual que routes)
+│   ├── middleware/
+│   │   └── error_handler.py
+│   ├── utils/
+│   │   ├── email_service.py
+│   │   ├── jwt.py
+│   │   ├── security.py
+│   │   ├── response.py
+│   │   └── waze_service.py
+│   └── img/
+│       ├── logo.png
+│       └── image.png
 │
-├── .env.example      # Plantilla para la configuración de variables de entorno
-├── .gitignore        # Archivos y carpetas excluidos del repositorio (ej: .venv, .env)
-├── requirements.txt  # Lista completa de dependencias del proyecto
-└── README.md         # Documentación del proyecto
-
+└── frontend/                         ← FRONTEND (React + TypeScript + Vite)
+    ├── index.html
+    ├── package.json / package-lock.json
+    ├── vite.config.ts
+    ├── tsconfig.json, tsconfig.app.json, tsconfig.node.json
+    ├── README.md, ESTRUCTURA.md
+    │
+    ├── public/                       ← archivos estáticos del proyecto original
+    │   ├── admin.html, dashboard_usuario.html, mapa.html
+    │   ├── admin.css, dashboard.css, dashboard_usuario.css, estilos_mapa.css
+    │   └── img/  (banner, logo, seccion1-6, cargadores, wallbox…)
+    │
+    └── src/
+        ├── main.tsx
+        ├── App.tsx                   ← landing/home (≈44 KB)
+        ├── styles.css
+        ├── vite-env.d.ts
+        │
+        ├── api/                      ← una capa por recurso del backend
+        │   ├── httpClient.ts
+        │   ├── auth.api.ts, admin.api.ts, mapa.api.ts
+        │   ├── reservas.api.ts, vehiculos.api.ts, cargas.api.ts
+        │   ├── calificaciones.api.ts, favoritos.api.ts
+        │   ├── metodosPago.api.ts, notificaciones.api.ts
+        │   └── reportes.api.ts, contacto.api.ts, estado.api.ts
+        │
+        ├── components/
+        │   ├── AuthModal.tsx
+        │   ├── ModalPago.tsx
+        │   ├── OlvidarContrasena.tsx
+        │   └── Productos.tsx         (vacío)
+        │
+        ├── context/
+        │   └── AuthContext.tsx
+        │
+        ├── routes/
+        │   └── AppRouter.tsx
+        │
+        ├── features/
+        │   ├── admin/                ← AdminPage.tsx + subcarpetas estaciones/, reportes/, usuarios/
+        │   ├── auth/                 ← components/, hooks/ (solo READMEs)
+        │   ├── dashboard/            ← DashboardPage.tsx (≈40 KB)
+        │   ├── dashboard-usuario/    ← calificaciones/, favoritos/, metodos-pago/,
+        │   │                            reservas/, vehiculos/ (solo READMEs)
+        │   ├── landing/              ← components/ (solo READMEs)
+        │   └── mapa/                 ← MapaPage.tsx, types.ts, components/EstacionDetalle.tsx
+        │
+        ├── styles/
+        │   ├── estilos.css, admin.css, dashboard.css
+        │   ├── dashboard_usuario.css, estilos_mapa.css
+        │
+        ├── layouts/   types/   utils/    ← solo READMEs (placeholders)
 ```
 ---
 🚀 Guía de Instalación y Despliegue
@@ -156,7 +255,7 @@ git push origin tu_rama
 
     Kevyn Andres Roa
 
-    Julian Stiven Cruz
+    Julian Estiben Cruz
 
     Jhon Alexander Muñoz
 
