@@ -2,16 +2,20 @@
 # EV CHARGE - API REST
 
 ## ⚡ Descripción
-Backend centralizado para la plataforma de búsqueda y gestión de estaciones de carga eléctrica (electrolineras) en Colombia. Este componente actúa como el núcleo lógico (API REST) que procesa de forma segura la autenticación de usuarios, la consulta de conectores y la administración del sistema.
+El sistema titulado como EV Charge, esta centrado en convertir la movilidad electrica en algo mas factible haciendo que sea mejor la recarga de los vehiculos electricos
+a nivel Colombia guiando a los usuarios a mas puntos de recarga como lo son las electrolineras, el mayor objetivo es poder llegar a expandir nuestro servicio a profundidad globalmente.
+El sistema busca eliminar los problemas de compatibilidad de conectores, permitiendo a los usuarios ubicar puntos de carga disponibles en tiempo real, filtrar por tipo de conector, 
+gestionar reservas, registrar vehículos y consultar historiales de consumo, ofreciendo a su vez trazabilidad operativa y analítica para los operadores.
 
----
+
+--- 
 
 ## 🛠️ Tecnologías Utilizadas
 
 * **Lenguaje:** Python 3.12+
 * **Framework Principal:** FastAPI (Alto rendimiento y documentación automática)
 * **Servidor Web:** Uvicorn (Motor Asíncrono de Ejecución)
-* **Base de Datos / ORM:** PostgreSQL / MariaDB + SQLAlchemy
+* **Base de Datos / ORM:** PostgreSQL / SQLAlchemy
 * **Seguridad:** JWT (JSON Web Tokens) + Bcrypt / Python-Multipart (Encriptación de credenciales)
 
 ---
@@ -19,23 +23,62 @@ Backend centralizado para la plataforma de búsqueda y gestión de estaciones de
 ## 📂 Estructura del Proyecto
 
 ```text
-project/
+Avanze-react-native-main/
+├── J-K/                          ← Backend + frontend web (EV Charge)
+│   ├── app/                      ← Backend FastAPI (Python)
+│   │   ├── main.py               ← Punto de entrada: CORS, routers, creación/ajuste de tablas
+│   │   ├── config/database.py    ← Conexión SQLAlchemy (PostgreSQL)
+│   │   ├── models/               ← Tablas: usuario, vehiculo, reserva, carga, compra,
+│   │   │                           calificacion, favorito, metodo_pago, notificacion,
+│   │   │                           reporte, contacto, estacion_propia, estacion_cargador,
+│   │   │                           estado_estacion
+│   │   ├── schemas/              ← Esquemas Pydantic (validación de entrada/salida)
+│   │   ├── controllers/          ← Lógica de negocio por módulo
+│   │   ├── routes/               ← Endpoints (auth, admin, mapa, reservas, pagos,
+│   │   │                           asistente, olvidar contraseña, etc.)
+│   │   ├── services/             ← asistente_service, email_service, tarifas_service
+│   │   ├── middleware/           ← error_handler.py
+│   │   ├── utils/                ← jwt, security, response, content_filter
+│   │   └── img/                  ← logo e imagen
+│   │
+│   ├── frontend/                 ← SPA React + TypeScript + Vite
+│   │   ├── index.html
+│   │   ├── vite.config.ts, tsconfig*.json, package.json
+│   │   ├── public/               ← HTML/CSS originales (admin, dashboard, mapa) e imágenes
+│   │   └── src/
+│   │       ├── main.tsx, App.tsx
+│   │       ├── routes/AppRouter.tsx   ← Rutas con lazy loading + RutaPrivada / RutaAdmin
+│   │       ├── context/AuthContext.tsx
+│   │       ├── api/              ← Un cliente por módulo + httpClient (axios)
+│   │       ├── components/       ← AuthModal, ModalPago, AsistenteChat,
+│   │       │                       GlobalNotifications, MetodoPagoForm, Productos...
+│   │       ├── features/         ← admin, dashboard, dashboard-usuario (calificaciones,
+│   │       │                       favoritos, metodos-pago, reservas, vehiculos),
+│   │       │                       mapa, productos, landing, auth
+│   │       ├── styles/           ← CSS por sección (admin, dashboard, mapa, responsive)
+│   │       ├── utils/contentFilter.ts
+│   │       └── types/, layouts/
+│   │
+│   ├── .github/workflows/ci.yml
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── README.md, LOGIN_RESERVAS_GUIDE.md, PROFILE_FEATURE_GUIDE.md
 │
-├── app/
-│   ├── config/       # Configuración de variables de entorno y bases de datos
-│   ├── controllers/  # Lógica de negocio y controladores principales
-│   ├── models/       # Modelos relacionales de la base de datos (SQLAlchemy)
-│   ├── routes/       # Definición de Endpoints y Rutas Protegidas (HTTP)
-│   ├── schemas/      # Modelos de validación y serialización de datos (Pydantic)
-│   ├── utils/        # Funciones auxiliares (Hashing, JWT tokens, etc.)
-│   └── main.py       # Punto de entrada de la aplicación FastAPI
-│
-├── .env.example      # Plantilla para la configuración de variables de entorno
-├── .gitignore        # Archivos y carpetas excluidos del repositorio (ej: .venv, .env)
-├── requirements.txt  # Lista completa de dependencias del proyecto
-└── README.md         # Documentación del proyecto
-
-```
+└── mobile/                       ← App Expo (SDK 57) + React Native 0.86
+    ├── index.ts, App.tsx, app.json
+    ├── package.json
+    ├── .env, .env.example
+    ├── CLAUDE.md, AGENTS.md, .claude/settings.json
+    ├── assets/                   ← Iconos, splash, imágenes de productos y secciones
+    └── src/
+        ├── screens/HomeScreen.tsx
+        ├── components/           ← Header, Hero, About, Services, Categories, Stats,
+        │                           Faq, Contact, Footer (secciones de la landing),
+        │                           AuthModal, MapPreviewModal
+        ├── api/                  ← auth, contacto, mapa, notificaciones + httpClient
+        ├── context/AuthContext.tsx
+        ├── theme/                ← colors.ts, spacing.ts
+        └── types/index.ts
 ---
 🚀 Guía de Instalación y Despliegue
 ## 1. Clonar el Repositorio
@@ -156,7 +199,7 @@ git push origin tu_rama
 
     Kevyn Andres Roa
 
-    Julian Stiven Cruz
+    Julian Estiben Cruz
 
     Jhon Alexander Muñoz
 
